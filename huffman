@@ -1,0 +1,39 @@
+Jak działa kodowanie Huffmana?
+
+1. Liczenie częstotliwości symboli
+   - Analizujemy dane wejściowe i zliczamy, ile razy występuje każdy symbol (np. znak lub bajt).
+
+2. Budowa kolejki priorytetowej (min-heap)
+   - Tworzymy węzeł dla każdego symbolu z jego częstotliwością.
+   - Umieszczamy wszystkie węzły w kolejce priorytetowej, gdzie priorytet ma najniższa częstotliwość.
+
+3. Budowa drzewa Huffmana
+   - Dopóki w kolejce jest więcej niż jeden węzeł:
+     - Usuwamy dwa węzły o najmniejszych częstotliwościach.
+     - Tworzymy nowy węzeł rodzica, którego częstotliwość to suma tych dwóch.
+     - Ustawiamy te dwa węzły jako lewe i prawe dziecko nowego węzła.
+     - Wstawiamy nowy węzeł z powrotem do kolejki.
+   - Na końcu zostaje jeden węzeł — korzeń drzewa.
+
+4. Generowanie kodów dla symboli
+   - Przechodzimy od korzenia do liści:
+     - Przejście w lewo oznacza '0', w prawo '1'.
+     - Ciąg zer i jedynek z tej ścieżki to kod symbolu.
+   - Częściej występujące symbole mają krótsze kody.
+
+5. Kodowanie danych
+   - Zastępujemy każdy symbol jego kodem binarnym uzyskanym z drzewa.
+
+6. Zapis zakodowanych danych i struktury drzewa
+   - Aby później odkodować dane, zapisujemy także strukturę drzewa lub częstotliwości symboli w pliku.
+
+7. Dekodowanie
+   - Odczytujemy strukturę drzewa lub częstotliwości.
+   - Czytamy bity z zakodowanych danych i przechodzimy po drzewie:
+     - '0' idziemy w lewo, '1' w prawo.
+     - Po dojściu do liścia wypisujemy symbol.
+   - Powtarzamy, aż odkodujemy cały plik.
+
+Dlaczego Huffman jest efektywny?
+- Przypisuje krótsze kody częściej występującym symbolom,
+  co zmniejsza średnią długość zakodowanych danych i oszczędza miejsce.

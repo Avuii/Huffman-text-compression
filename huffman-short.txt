@@ -1,0 +1,10 @@
+Huffman
+
+What does it do?
+Encodes symbols into shorter bit codes.
+
+Level of operation
+Symbols (single bytes)
+
+Deduplication?
+No

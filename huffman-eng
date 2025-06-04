@@ -1,0 +1,39 @@
+How Huffman Coding Works
+
+1. Count symbol frequencies
+   - Analyze the input data and count how many times each symbol (e.g., character or byte) appears.
+
+2. Build a priority queue (min-heap)
+   - Create a node for each symbol with its frequency.
+   - Insert all nodes into a priority queue, where the lowest frequency has the highest priority.
+
+3. Build the Huffman tree
+   - While there is more than one node in the queue:
+     - Remove the two nodes with the smallest frequencies.
+     - Create a new parent node with frequency equal to the sum of those two nodes.
+     - Set the two nodes as left and right children of the new node.
+     - Insert the new node back into the queue.
+   - At the end, one node remains — the root of the tree.
+
+4. Generate codes for each symbol
+   - Traverse the tree from root to leaves:
+     - Going left means '0', going right means '1'.
+     - The sequence of 0s and 1s along the path is the code for that symbol.
+   - More frequent symbols get shorter codes.
+
+5. Encode the data
+   - Replace each symbol in the input with its corresponding bit code from the tree.
+
+6. Write encoded data and tree structure
+   - To decode later, save the tree structure or symbol frequencies in the compressed file.
+
+7. Decoding
+   - Read the tree structure or frequencies.
+   - Read bits from the encoded data and traverse the tree:
+     - '0' means go left, '1' means go right.
+     - When reaching a leaf, output the symbol.
+   - Repeat until the entire file is decoded.
+
+Why is Huffman efficient?
+- It assigns shorter codes to more frequent symbols,
+  reducing the average length of the encoded data and saving space.
