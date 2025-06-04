@@ -10,7 +10,7 @@ The program supports two interactive modes:
 - **decode** – Decompresses a binary-encoded bitstring using a saved alphabet file to reconstruct the original content.
 
 ### All interactions are performed via terminal prompts:
-- You enter:
+You enter:
   - The input filename
   - Whether to `encode` or `decode`
   - Output filename
