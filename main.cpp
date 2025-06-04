@@ -7,23 +7,23 @@
 #include <string>
 #include <bitset>
 #include <cstdint>
-#include <limits>    // dla std::numeric_limits
+#include <limits>
 
 using namespace std;
 
 // ─────────────────────────────────────────────────────────────
-//     DEFINICJE Z HEADER.H
+//  // DEFINITIONS FROM HEADER.H
 // ─────────────────────────────────────────────────────────────
 
-// Konstruktor HuffmanNode
+
 HuffmanNode::HuffmanNode(char c, int f)
     : ch(c), freq(f), left(nullptr), right(nullptr) {}
 
-// Deterministyczny operator porównania w kolejce priorytetowej
+// Deterministic comparison operator in the priority queue
 bool Compare::operator()(HuffmanNode* l, HuffmanNode* r) {
     if (l->freq == r->freq) {
-        // Jeśli częstotliwości są równe, porównujemy znaki ASCII.
-        // Węzły wewnętrzne ('\0') traktujemy jako „większe” (kod 127).
+        // If the frequencies are equal, we compare the ASCII characters.
+        // Internal nodes ('\0') are treated as "greater" (code 127).
         char lch = (l->ch == '\0') ? 127 : l->ch;
         char rch = (r->ch == '\0') ? 127 : r->ch;
         return lch > rch;
@@ -32,7 +32,7 @@ bool Compare::operator()(HuffmanNode* l, HuffmanNode* r) {
 }
 
 // ─────────────────────────────────────────────────────────────
-//     IMPLEMENTACJE METOD KLASY HUFFMAN
+//     IMPLEMENTATIONS OF THE HUFFMAN CLASS METHODS
 // ─────────────────────────────────────────────────────────────
 
 void Huffman::generateCodes(HuffmanNode* root,
@@ -41,7 +41,7 @@ void Huffman::generateCodes(HuffmanNode* root,
 {
     if (!root) return;
 
-    // Jeżeli węzeł jest liściem, zapisujemy mapowanie znak → prefix
+    // If the node is a leaf, we save the character → prefix mapping
     if (!root->left && !root->right) {
         codes[root->ch] = prefix;
     }
@@ -108,7 +108,7 @@ std::string Huffman::decode(const std::string& encoded, HuffmanNode* root)
             return "";
         }
 
-        // Jeżeli dotarliśmy do liścia – odczytujemy znak i wracamy do korzenia
+        // If we have reached a leaf – we read the character and return to the root
         if (!current->left && !current->right) {
             decoded += current->ch;
             current = root;
@@ -119,31 +119,31 @@ std::string Huffman::decode(const std::string& encoded, HuffmanNode* root)
 }
 
 // ─────────────────────────────────────────────────────────────
-//     PROTOTYPY FUNKCJI POMOCNICZYCH (poza klasą Huffman)
+//     HELPER FUNCTION PROTOTYPES (outside the Huffman class)
 // ─────────────────────────────────────────────────────────────
 
-// Wczytuje cały plik (dowolny; nawet binarny) do stringa.
+// Loads the entire file (any type; even binary) into a string.
 string readFileToString(const string& filename);
 
-// Zapisuje dowolny string do pliku w trybie binarnym.
+// Writes any string to a file in binary mode.
 void writeBinaryToFile(const string& filename, const string& data);
 
-// Zapisuje mapę (char → kod bitowy) do pliku tekstowego.
-// Pierwsza linia: liczba wpisów. Kolejne linie: <ASCII_znaku> <kod>.
+// Saves the map (char → bit code) to a text file.
+// First line: number of entries. Subsequent lines: \<ASCII\_character> <code>.
 bool writeAlphabetToFile(const string& filename,
                          const unordered_map<char, string>& codes);
 
-// Wczytuje plik „alfabetu” i buduje mapę char → bitstring
-// Zwraca false, jeśli wystąpi błąd formatu lub I/O.
+// Loads the "alphabet" file and builds a map from char to bitstring.
+// Returns false if a format or I/O error occurs.
 bool readAlphabetFromFile(const string& filename,
                           unordered_map<char, string>& codes);
 
-// Buduje drzewo Huffmana na podstawie mapy (char → bitstring).
-// Zwraca nullptr, jeśli wykryje konflikt w kodach (np. dwa znaki ten sam kod).
+// Builds the Huffman tree based on the map (char → bitstring).
+// Returns nullptr if a conflict is detected in the codes (e.g., two characters with the same code).
 HuffmanNode* buildTreeFromCodes(const unordered_map<char, string>& codes);
 
 // ─────────────────────────────────────────────────────────────
-//     IMPLEMENTACJE POMOCNICZYCH FUNKCJI
+//     IMPLEMENTATIONS OF HELPER FUNCTIONS
 // ─────────────────────────────────────────────────────────────
 
 string readFileToString(const string& filename) {
@@ -237,7 +237,7 @@ bool readAlphabetFromFile(const string& filename,
             return false;
         }
 
-        // Sprawdzenie, czy kod bitowy składa się wyłącznie z '0' i '1'
+        // Checks if the bit code consists only of '0' and '1' characters
         for (char b : bitstr) {
             if (b != '0' && b != '1') {
                 cerr << "Alphabet file error: invalid bit '" << b
@@ -281,7 +281,7 @@ HuffmanNode* buildTreeFromCodes(const unordered_map<char, string>& codes) {
                 current = current->right;
             }
         }
-        // Jeżeli już w tym miejscu istniał znak (liść), to mamy konflikt
+        // If a character (leaf) already existed at this position, then there is a conflict
         if (current->ch != '\0') {
             cerr << "Alphabet build error: duplicate code for character '"
                  << c << "'\n";
@@ -295,7 +295,7 @@ HuffmanNode* buildTreeFromCodes(const unordered_map<char, string>& codes) {
 }
 
 // ─────────────────────────────────────────────────────────────
-//     GŁÓWNA FUNKCJA: obsługa trybu encode/decode z zabezpieczeniami
+//
 // ─────────────────────────────────────────────────────────────
 
 int main() {
@@ -329,12 +329,12 @@ int main() {
         cout << "Invalid choice, please type \"encode\" or \"decode\".\n";
     }
 
-    Huffman hf; // obiekt klasy do wywoływania metod generateCodes, freeTree, encode, decode
+    Huffman hf; // An object of the class used to call the methods generateCodes, freeTree, encode, decode
 
     if (answer == "encode" || answer == "Encode" || answer == "ENCODE") {
-        // ────────────── TRYB ENCODE ───────────────
+        // ────────────── ENCODE MODE ───────────────
 
-        // 1) Liczymy częstotliwości znaków
+        // 1) count the frequencies of characters
         unordered_map<char, int> freq;
         for (unsigned char c : text) {
             freq[static_cast<char>(c)]++;
@@ -345,13 +345,13 @@ int main() {
             return 1;
         }
 
-        // 2) Budujemy kolejkę priorytetową liści
+        // 2)  build the priority queue of leaf nodes
         priority_queue<HuffmanNode*, vector<HuffmanNode*>, Compare> pq;
         for (auto& p : freq) {
             pq.push(new HuffmanNode(p.first, p.second));
         }
 
-        // 3) Łączymy węzły aż zostanie jeden korzeń
+        // 3)  merge nodes until only one root remains.
         while (pq.size() > 1) {
             HuffmanNode* left = pq.top(); pq.pop();
             HuffmanNode* right = pq.top(); pq.pop();
@@ -370,7 +370,7 @@ int main() {
             return 1;
         }
 
-        // 4) Generujemy mapę (char → bitstring)
+        // 4) generating the map (char → bitstring)
         unordered_map<char, string> codes;
         hf.generateCodes(root, "", codes);
 
@@ -380,7 +380,7 @@ int main() {
             return 1;
         }
 
-        // 5) Kodujemy cały tekst
+        // 5) encoding
         string encoded = hf.encode(text, codes);
         if (encoded.empty()) {
             cerr << "Encoding failed (empty result).\n";
@@ -388,7 +388,7 @@ int main() {
             return 1;
         }
 
-        // 6) Zapisujemy zakodowany ciąg do pliku
+        // 6) write to file
         cout << "Enter output filename for encoded data: ";
         string outputFile;
         if (!getline(cin, outputFile) || outputFile.empty()) {
@@ -399,8 +399,8 @@ int main() {
         writeBinaryToFile(outputFile, encoded);
         cout << "Encoding complete. Encoded data saved to: " << outputFile << "\n";
 
-        // 7) Zapisujemy „alfabet” do pliku
-        cout << "Enter filename to save alphabet (char→bitstring): ";
+        // 7) write alphabet to file
+        cout << "Enter filename to save alphabet (char → bitstring): ";
         string alphabetFile;
         if (!getline(cin, alphabetFile) || alphabetFile.empty()) {
             cerr << "No alphabet filename provided.\n";
@@ -414,13 +414,12 @@ int main() {
         }
         cout << "Alphabet saved to: " << alphabetFile << "\n";
 
-        // 8) Zwalniamy drzewo
         hf.freeTree(root);
     }
     else {
-        // ────────────── TRYB DECODE ───────────────
+        // ────────────── DECODE MODE ───────────────
 
-        // 1) Sprawdzamy, czy „text” to ciąg tylko '0' i '1'
+        // 1) We check if "text" is a string containing only '0' and '1' characters.
         bool validBits = true;
         for (char b : text) {
             if (b != '0' && b != '1') {
@@ -433,8 +432,8 @@ int main() {
             return 1;
         }
 
-        // 2) Wczytujemy nazwę pliku alfabetu
-        cout << "Enter alphabet filename (char→bitstring): ";
+        // 2) We read the name of the alphabet file.
+        cout << "Enter alphabet filename (char → bitstring): ";
         string alphabetFile;
         if (!getline(cin, alphabetFile) || alphabetFile.empty()) {
             cerr << "No alphabet filename provided.\n";
@@ -447,14 +446,14 @@ int main() {
             return 1;
         }
 
-        // 3) Odtwarzamy drzewo z mapy kodów
+        // 3) We reconstruct the tree from the code map.
         HuffmanNode* root = buildTreeFromCodes(codes);
         if (!root) {
             cerr << "Failed to build Huffman tree from alphabet.\n";
             return 1;
         }
 
-        // 4) Dekodujemy
+        // 4) decoding
         string decoded = hf.decode(text, root);
         if (decoded.empty() && !text.empty()) {
             cerr << "Decoding failed (empty result).\n";
@@ -464,7 +463,7 @@ int main() {
 
         cout << "Decoded string:\n" << decoded << "\n";
 
-        // 5) Zapisujemy wynik dekodowania do pliku
+        // 5) write to file
         cout << "Enter output filename for decoded data: ";
         string outputFile;
         if (!getline(cin, outputFile) || outputFile.empty()) {
@@ -475,7 +474,6 @@ int main() {
         writeBinaryToFile(outputFile, decoded);
         cout << "Decoding complete. Decoded data saved to: " << outputFile << "\n";
 
-        // 6) Zwalniamy drzewo
         hf.freeTree(root);
     }
 

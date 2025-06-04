@@ -9,31 +9,27 @@
 #include <bitset>
 
 
-// Struktura węzła drzewa Huffmana
+// Huffman tree node structure
 struct HuffmanNode {
     char ch;             // symbol
-    int freq;            // częstotliwość
-    HuffmanNode* left;   // lewe dziecko
-    HuffmanNode* right;  // prawe dziecko
+    int freq;            // frequency
+    HuffmanNode* left;   // left child
+    HuffmanNode* right;  // right child
 
     HuffmanNode(char c, int f);
 };
 
-// Porównywarka do kolejki priorytetowej (min-heap)
+// Comparator for the priority queue (min-heap)
 struct Compare { bool operator()(HuffmanNode* l, HuffmanNode* r);};
 
 class Huffman {
 public:
-    // Rekurencyjnie generuje mapę kodów Huffmana (znak -> kod bitowy)
+    // Recursively generates the Huffman code map (character -> bit code)
     void generateCodes(HuffmanNode* root, const std::string& prefix, std::unordered_map<char, std::string>& codes);
-    // Zwalnia pamięć całego drzewa Huffmana
-    void freeTree(HuffmanNode* root);
 
+    void freeTree(HuffmanNode* root); // Frees all nodes in the Huffman tree starting from root
 
-    // Koduje tekst na podstawie mapy kodów Huffmana
     std::string encode(const std::string& text, const std::unordered_map<char, std::string>& codes);
-
-    // Dekoduje zakodowany tekst na podstawie drzewa Huffmana
     std::string decode(const std::string& encoded, HuffmanNode* root);
 
 
