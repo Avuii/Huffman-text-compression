@@ -35,5 +35,6 @@ Standard C++ libraries
 Building
 Compile the decoder using your preferred compiler. For example, using g++:
 
+---
 ###Author
 Created for educational purposes by Avui.
